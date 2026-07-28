@@ -54,22 +54,22 @@ public class EventoController {
         return eventoService.buscarPorId(idEvento);
     }
 
-    @GetMapping("/categoria")
+    @GetMapping("/categoria/{categoria}")
     public List<EventoResponse> buscarPorCategoria(Categoria categoria){
         return eventoService.buscarPorCategoria(categoria);
     }
 
-    @GetMapping("/local")
+    @GetMapping("/local/{local}")
     public List<EventoResponse> buscarPorLocal(Local local){
         return eventoService.buscarPorLocal(local);
     }
 
-    @GetMapping("/status")
+    @GetMapping("/status/{status}")
     public List<EventoResponse> buscarPorStatus(StatusEvento statusEvento){
         return eventoService.buscarPorStatus(statusEvento);
     }
 
-    @GetMapping("/data")
+    @GetMapping("/data/{data}")
     public List<EventoResponse> buscarPorData(LocalDate data){
         return eventoService.buscarPorData(data);
     }
