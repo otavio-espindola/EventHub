@@ -1,0 +1,7 @@
+package com.example.eventhub.exception;
+
+public class InscricaoDuplicadaException extends RuntimeException {
+    public InscricaoDuplicadaException(String message) {
+        super(message);
+    }
+}
