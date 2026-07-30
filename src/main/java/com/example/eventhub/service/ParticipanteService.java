@@ -20,16 +20,15 @@ public class ParticipanteService {
         this.Irepository = Irepository;
 
     }
-
     //CRUD
-
-    public ParticipanteResponse cadastrar (ParticipanteRequest request){
+    public ParticipanteResponse cadastrar(ParticipanteRequest request){
             Participante participante = new Participante();
 
             participante.setCpf(request.cpf());
             participante.setNome(request.nome());
             participante.setEmail(request.email());
             participante.setTelefone(request.telefone());
+
             Participante salvo = repository.save(participante);
             return toResponseDTO(salvo);
         }
@@ -115,8 +114,5 @@ public class ParticipanteService {
                 .map(this::toResponseDTO)
                 .toList();
     }
-
-
-
 }
 
