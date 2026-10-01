@@ -59,8 +59,8 @@ public class LocalService {
     private LocalResponse toResponseDTO(Local local) {
         return new LocalResponse(
                 local.getIdLocal(),
-                local.getCidade(),
                 local.getNome(),
+                local.getCidade(),
                 local.getEndereco(),
                 local.getCapacidadeMaxima()
         );

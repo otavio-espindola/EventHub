@@ -31,42 +31,49 @@ public class ParticipanteController {
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(Long idParticipante){
+    public void excluir(@PathVariable("id") Long idParticipante){
         participanteService.excluir(idParticipante);
     }
 
     @PutMapping("/{id}")
-    public ParticipanteResponse atualizar(@PathVariable Long idParticipante, @RequestBody ParticipanteRequest request){
+    public ParticipanteResponse atualizar(@PathVariable("id") Long idParticipante, @RequestBody ParticipanteRequest request){
         return participanteService.atualizar(idParticipante, request);
     }
 
     @GetMapping("/{id}")
-    public ParticipanteResponse buscarPorId(Long idParticipante){
+    public ParticipanteResponse buscarPorId(@PathVariable("id") Long idParticipante){
         return participanteService.buscarPorId(idParticipante);
     }
 
-    @GetMapping("/nome/{nome}")
-    public List<ParticipanteResponse> buscarPorParticipante(String nome){
+    @GetMapping("/buscar/nome/{nome}")
+    public List<ParticipanteResponse> buscarPorParticipante(
+            @PathVariable("nome") String nome) {
         return participanteService.buscarPorNomeParticipante(nome);
     }
 
-    @GetMapping("/cpf/{cpf}")
-    public List<ParticipanteResponse> buscarPorCPF(String cpf){
+    @GetMapping("/buscar/cpf/{cpf}")
+    public List<ParticipanteResponse> buscarPorCPF(
+            @PathVariable("cpf") String cpf) {
         return participanteService.buscarPorCpf(cpf);
     }
 
-    @GetMapping("/email/{email}")
-    public List<ParticipanteResponse> buscarPorEmail(String email){
+    @GetMapping("/buscar/email/{email}")
+    public List<ParticipanteResponse> buscarPorEmail(
+            @PathVariable("email") String email) {
         return participanteService.buscarPorEmail(email);
     }
 
-    @GetMapping("/ordenar/{nome}")
-    public List<ParticipanteResponse> ordenarPorNome(@RequestParam Sort.Direction direcao){
+    @GetMapping("/ordenar/nome")
+    public List<ParticipanteResponse> ordenarPorNome(
+            @RequestParam(name = "direcao", defaultValue = "ASC")
+            Sort.Direction direcao) {
         return participanteService.OrdenarNome(direcao);
     }
 
-    @GetMapping("/ordenar/{email}")
-    public List<ParticipanteResponse> ordenarPorEmail(@RequestParam Sort.Direction direcao){
+    @GetMapping("/ordenar/email")
+    public List<ParticipanteResponse> ordenarPorEmail(
+            @RequestParam(name = "direcao", defaultValue = "ASC")
+            Sort.Direction direcao) {
         return participanteService.OrdenarEmail(direcao);
     }
 }

@@ -1,23 +1,15 @@
 package com.example.eventhub.service;
 
-import com.example.eventhub.dto.dashboard.DashboardResponse;
-import com.example.eventhub.dto.dashboard.InscricoesPorMesResponse;
-import com.example.eventhub.dto.dashboard.ParticipantesPorEventoResponse;
+import com.example.eventhub.dto.dashboard.*;
 import com.example.eventhub.dto.evento.EventoResponse;
-import com.example.eventhub.model.Categoria;
-import com.example.eventhub.model.Evento;
-import com.example.eventhub.model.Local;
-import com.example.eventhub.repository.CategoriaRepository;
-import com.example.eventhub.repository.EventoRepository;
-import com.example.eventhub.repository.InscricaoRepository;
-import com.example.eventhub.repository.ParticipanteRepository;
+import com.example.eventhub.model.*;
+import com.example.eventhub.repository.*;
 import com.example.eventhub.status.StatusInscricao;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -102,18 +94,20 @@ public class DashboardService {
 
     public List<InscricoesPorMesResponse> inscricoesPorMes() {
 
-        Map<Integer, Long> mapa = inscricaoRepository.findAll()
+        Map<Integer,List<Inscricao>> mapa = inscricaoRepository.findAll()
                 .stream()
                 .collect(Collectors.groupingBy(
-                        i -> i.getDataInscricao().getMonthValue(),
-                        Collectors.counting()
+                        i -> i.getDataInscricao().getMonthValue()
                 ));
 
         return mapa.entrySet()
                 .stream()
                 .map(e -> new InscricoesPorMesResponse(
                         e.getKey(),
-                        e.getValue()
+                        Long.valueOf(e.getValue().size()),
+                        e.getValue().stream()
+                                .filter(i -> i.getStatus() == StatusInscricao.ATIVA)
+                                .count()
                 ))
                 .toList();
     }
@@ -134,8 +128,13 @@ public class DashboardService {
 
     private EventoResponse toResponseDTO(Evento evento) {
 
+        long inscricoesAtivas =
+                evento.getInscricoes()
+                        .stream()
+                        .filter(i -> i.getStatus() == StatusInscricao.ATIVA)
+                                .count();
         int vagasRestantes =
-           evento.getLimiteParticipantes() - evento.getInscricoes().size();
+                evento.getLimiteParticipantes() - Math.toIntExact(inscricoesAtivas);
 
         return new EventoResponse(
                 evento.getIdEvento(),

@@ -1,7 +1,5 @@
 package com.example.eventhub.service;
 
-import com.example.eventhub.dto.evento.EventoRequest;
-import com.example.eventhub.dto.evento.EventoResponse;
 import com.example.eventhub.dto.inscricao.InscricaoRequest;
 import com.example.eventhub.dto.inscricao.InscricaoResponse;
 import com.example.eventhub.model.*;
@@ -45,11 +43,20 @@ public class InscricaoService {
             throw new RuntimeException("Evento encerrado ou cancelado");
         }
 
-        if(evento.getInscricoes().size() >= evento.getLimiteParticipantes()){
+        long inscricoesAtivas = repository.countByEventoAndStatus(
+                evento,
+                StatusInscricao.ATIVA
+        );
+
+        if (inscricoesAtivas >= evento.getLimiteParticipantes()) {
             throw new RuntimeException("Evento sem vagas disponíveis");
         }
 
-        if(repository.existsByParticipanteAndEvento(participante, evento)){
+        if (repository.existsByParticipanteAndEventoAndStatus(
+                participante,
+                evento,
+                StatusInscricao.ATIVA
+        )) {
             throw new RuntimeException("Participante já inscrito neste evento");
         }
 
@@ -72,10 +79,14 @@ public class InscricaoService {
                 inscricao.getEvento()
         );
     }
-    public void cancelarInscricao(Long id){
+    public void cancelarInscricao(Long id) {
 
         Inscricao inscricao = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Inscrição não encontrada"));
+
+        if (inscricao.getStatus() == StatusInscricao.CANCELADA) {
+            throw new RuntimeException("Esta inscrição já foi cancelada");
+        }
 
         inscricao.setStatus(StatusInscricao.CANCELADA);
         repository.save(inscricao);

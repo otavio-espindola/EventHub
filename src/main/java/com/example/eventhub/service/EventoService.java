@@ -4,6 +4,7 @@ import com.example.eventhub.dto.evento.*;
 import com.example.eventhub.model.*;
 import com.example.eventhub.repository.*;
 import com.example.eventhub.status.StatusEvento;
+import com.example.eventhub.status.StatusInscricao;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +52,13 @@ public class EventoService {
 
     private EventoResponse toResponseDTO(Evento evento) {
 
+        long inscricoesAtivas =
+                evento.getInscricoes()
+                        .stream()
+                        .filter(i -> i.getStatus() == StatusInscricao.ATIVA)
+                        .count();
         int vagasRestantes =
-                evento.getLimiteParticipantes() - evento.getInscricoes().size();
+                evento.getLimiteParticipantes() - Math.toIntExact(inscricoesAtivas);
 
         return new EventoResponse(
                 evento.getIdEvento(),

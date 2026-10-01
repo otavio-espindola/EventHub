@@ -59,43 +59,33 @@ public class EventoController {
         return eventoService.buscarPorCategoria(categoria);
     }
 
-    @GetMapping("/local/{local}")
-    public List<EventoResponse> buscarPorLocal(Local local){
+    @GetMapping("/local/{localId}")
+    public List<EventoResponse> buscarPorLocal(@PathVariable("localId") Local local){
         return eventoService.buscarPorLocal(local);
     }
 
     @GetMapping("/status/{status}")
-    public List<EventoResponse> buscarPorStatus(StatusEvento statusEvento){
+    public List<EventoResponse> buscarPorStatus(@PathVariable("data") StatusEvento statusEvento){
         return eventoService.buscarPorStatus(statusEvento);
     }
 
     @GetMapping("/data/{data}")
-    public List<EventoResponse> buscarPorData(LocalDate data){
+    public List<EventoResponse> buscarPorData(@PathVariable("data") LocalDate data){
         return eventoService.buscarPorData(data);
     }
 
     @GetMapping("/ordenar/nome")
-    public List<EventoResponse> ordenarNome(@RequestParam Sort.Direction direcao){
+    public List<EventoResponse> ordenarNome(@RequestParam(defaultValue = "ASC") Sort.Direction direcao){
         return eventoService.ordenarPorNome(direcao);
     }
 
     @GetMapping("/ordenar/data")
-    public List<EventoResponse> ordenarData(@RequestParam Sort.Direction direcao){
+    public List<EventoResponse> ordenarData(@RequestParam (defaultValue = "ASC") Sort.Direction direcao){
         return eventoService.ordenarPorData(direcao);
     }
 
     @GetMapping("/ordenar/status")
-    public List<EventoResponse> ordenarStatus(@RequestParam Sort.Direction direcao){
+    public List<EventoResponse> ordenarStatus(@RequestParam(defaultValue = "ASC") Sort.Direction direcao){
         return eventoService.ordenarPorStatus(direcao);
     }
-
-
-
-
-
-
-
-
-
-
 }
