@@ -13,8 +13,8 @@ import java.util.List;
 public interface EventoRepository extends JpaRepository <Evento, Long>{
 
     List<Evento> findByNomeContainingIgnoreCase(String nome);
-    List<Evento> findByCategoriaContainingIgnoreCase(Categoria categoria);
-    List<Evento> findByLocalContainingIgnoreCase(Local local);
+    List<Evento> findByCategoria(Categoria categoria);
+    List<Evento> findByLocal(Local local);
     List<Evento> findByStatus(StatusEvento statusEvento);
     List<Evento> findByData(LocalDate data);
     List<Evento> findByDataAfter(LocalDate data);

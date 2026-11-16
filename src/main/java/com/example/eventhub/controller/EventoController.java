@@ -35,7 +35,7 @@ public class EventoController {
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(@RequestParam Long idEvento){
+    public void excluir(@PathVariable Long idEvento){
         eventoService.excluir(idEvento);
     }
 
@@ -45,23 +45,25 @@ public class EventoController {
     }
 
     @GetMapping("/nome/{nome}")
-    public List<EventoResponse> buscarPorNome(@RequestParam String nome){
+    public List<EventoResponse> buscarPorNome(@PathVariable String nome){
         return eventoService.buscarPorNome(nome);
     }
 
     @GetMapping("/{idEvento}")
-    public EventoResponse buscarPorId(@RequestParam Long idEvento){
+    public EventoResponse buscarPorId(@PathVariable Long idEvento){
         return eventoService.buscarPorId(idEvento);
     }
 
-    @GetMapping("/categoria/{categoria}")
-    public List<EventoResponse> buscarPorCategoria(@RequestParam Categoria categoria){
-        return eventoService.buscarPorCategoria(categoria);
+    @GetMapping("/categoria/{categoriaId}")
+    public List<EventoResponse> buscarPorCategoria(
+            @PathVariable Long categoriaId) {
+        return eventoService.buscarPorCategoria(categoriaId);
     }
 
     @GetMapping("/local/{localId}")
-    public List<EventoResponse> buscarPorLocal(@PathVariable("localId") Local local){
-        return eventoService.buscarPorLocal(local);
+    public List<EventoResponse> buscarPorLocal(
+            @PathVariable Long localId) {
+        return eventoService.buscarPorLocal(localId);
     }
 
     @GetMapping("/status/{status}")

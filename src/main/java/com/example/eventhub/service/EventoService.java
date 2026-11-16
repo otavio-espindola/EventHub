@@ -135,16 +135,23 @@ public class EventoService {
                 .toList();
     };
 
-    public List<EventoResponse> buscarPorCategoria (Categoria categoria){
+    public List<EventoResponse> buscarPorCategoria (Long categoriaId){
 
-        return repository.findByCategoriaContainingIgnoreCase(categoria)
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+        return repository.findByCategoria(categoria)
                 .stream()
                 .map(this::toResponseDTO)
                 .toList();
     };
 
-    public List<EventoResponse> buscarPorLocal (Local local){
-        return repository.findByLocalContainingIgnoreCase(local)
+    public List<EventoResponse> buscarPorLocal (Long localId){
+
+        Local local = localRepository.findById(localId)
+                .orElseThrow(() -> new RuntimeException("Local não encontrado"));
+
+        return repository.findByLocal(local)
                 .stream()
                 .map(this::toResponseDTO)
                 .toList();
