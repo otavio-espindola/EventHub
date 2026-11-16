@@ -33,6 +33,8 @@ public class EventoService {
         Local local = localRepository.findById(request.localId())
                 .orElseThrow(() -> new RuntimeException("Local não encontrado"));
 
+        validarCapacidade(request, local);
+
         evento.setCategoria(categoria);
         evento.setData(request.data());
         evento.setDescricao(request.descricao());
@@ -101,6 +103,8 @@ public class EventoService {
         Local local = localRepository.findById(request.localId())
                 .orElseThrow(() -> new RuntimeException("Local não encontrado"));
 
+        validarCapacidade(request, local);
+
         if (repository.existsByLocalAndDataAndHorarioAndIdEventoNot(
                 local,
                 request.data(),
@@ -121,6 +125,18 @@ public class EventoService {
 
         return toResponseDTO(atualizado);
     }
+
+    public void validarCapacidade(EventoRequest dto, Local local){
+        if(dto.limiteParticipantes() == null ||
+        dto.limiteParticipantes() <= 0) {
+            throw new RuntimeException("O limite deve ser maior que zero");
+        }
+
+        if(dto.limiteParticipantes() > local.getCapacidadeMaxima()){
+            throw new RuntimeException("A capacidade máxima foi excedida");
+        }
+    }
+
 
     private Evento buscarEvento(Long id) {
         return repository.findById(id)
