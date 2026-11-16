@@ -3,10 +3,10 @@ package com.example.eventhub.service;
 import com.example.eventhub.dto.evento.*;
 import com.example.eventhub.model.*;
 import com.example.eventhub.repository.*;
-import com.example.eventhub.status.StatusEvento;
-import com.example.eventhub.status.StatusInscricao;
+import com.example.eventhub.status.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,11 +17,13 @@ public class EventoService {
     private final EventoRepository repository;
     private final CategoriaRepository categoriaRepository;
     private final LocalRepository localRepository;
+    private final InscricaoRepository inscricaoRepository;
 
-    public EventoService(EventoRepository repository, CategoriaRepository Crepository, LocalRepository Lrepository) {
+    public EventoService(EventoRepository repository, CategoriaRepository Crepository, LocalRepository Lrepository, InscricaoRepository Irepository) {
         this.repository = repository;
         this.localRepository = Lrepository;
         this.categoriaRepository = Crepository;
+        this.inscricaoRepository = Irepository;
     }
 
     public EventoResponse cadastrar(EventoRequest request) {
@@ -104,6 +106,7 @@ public class EventoService {
                 .orElseThrow(() -> new RuntimeException("Local não encontrado"));
 
         validarCapacidade(request, local);
+        validarLimiteComInscricoes(existente, request.limiteParticipantes());
 
         if (repository.existsByLocalAndDataAndHorarioAndIdEventoNot(
                 local,
@@ -135,8 +138,27 @@ public class EventoService {
         if(dto.limiteParticipantes() > local.getCapacidadeMaxima()){
             throw new RuntimeException("A capacidade máxima foi excedida");
         }
+        if (local.getCapacidadeMaxima() == null ||
+                local.getCapacidadeMaxima() <= 0) {
+            throw new RuntimeException(
+                    "A capacidade máxima do local não está configurada corretamente."
+            );
+        }
     }
 
+    private void validarLimiteComInscricoes(Evento evento, Integer novoLimite) {
+
+        long inscricoesAtivas = inscricaoRepository.countByEventoAndStatus(
+                evento,
+                StatusInscricao.ATIVA
+        );
+
+        if (novoLimite < inscricoesAtivas) {
+            throw new RuntimeException(
+                    "O novo limite não pode ser inferior ao número de inscrições ativas."
+            );
+        }
+    }
 
     private Evento buscarEvento(Long id) {
         return repository.findById(id)
