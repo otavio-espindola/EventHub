@@ -1,18 +1,15 @@
 package com.example.eventhub.controller;
 
-import com.example.eventhub.dto.dashboard.InscricoesPorMesResponse;
-import com.example.eventhub.dto.dashboard.ParticipantesPorEventoResponse;
+import com.example.eventhub.dto.dashboard.*;
 import com.example.eventhub.dto.evento.EventoResponse;
 import com.example.eventhub.model.Categoria;
 import com.example.eventhub.service.DashboardService;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequestMapping("/dashboard")
-@Controller
+@RestController
 public class DashboardController {
     private final DashboardService service;
 
@@ -63,5 +60,9 @@ public class DashboardController {
     @GetMapping
     public List<InscricoesPorMesResponse> inscricoesPorMes(){
         return service.inscricoesPorMes();
+    }
+    @GetMapping
+    public DashboardResponse dashboard() {
+        return service.dashboard();
     }
 }
