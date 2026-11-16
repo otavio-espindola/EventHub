@@ -45,17 +45,17 @@ public class EventoController {
     }
 
     @GetMapping("/nome/{nome}")
-    public List<EventoResponse> buscarPorNome(String nome){
+    public List<EventoResponse> buscarPorNome(@RequestParam String nome){
         return eventoService.buscarPorNome(nome);
     }
 
     @GetMapping("/{idEvento}")
-    public EventoResponse buscarPorId(Long idEvento){
+    public EventoResponse buscarPorId(@RequestParam Long idEvento){
         return eventoService.buscarPorId(idEvento);
     }
 
     @GetMapping("/categoria/{categoria}")
-    public List<EventoResponse> buscarPorCategoria(Categoria categoria){
+    public List<EventoResponse> buscarPorCategoria(@RequestParam Categoria categoria){
         return eventoService.buscarPorCategoria(categoria);
     }
 
@@ -65,7 +65,7 @@ public class EventoController {
     }
 
     @GetMapping("/status/{status}")
-    public List<EventoResponse> buscarPorStatus(@PathVariable("data") StatusEvento statusEvento){
+    public List<EventoResponse> buscarPorStatus(@PathVariable("status") StatusEvento statusEvento){
         return eventoService.buscarPorStatus(statusEvento);
     }
 
